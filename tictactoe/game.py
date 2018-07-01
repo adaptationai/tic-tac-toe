@@ -264,11 +264,11 @@ class Play_game:
                 print(self.player_two.agent.epsilon)
                 print(target_update)
                 self.player_two.agent.save_model(
-                    "drive/tictactoe/tictactoemodel.h5")
+                    "tictactoe/data/tictactoemodel.h5")
                 self.player_two.agent.save_target(
-                    "drive/tictactoe/tictactoetarget.h5")
+                    "tictactoe/data/tictactoetarget.h5")
                 self.player_two.agent.save_memory(
-                    "drive/tictactoe/ticdeque.pkl")
+                    "tictactoe/data/ticdeque.pkl")
 
         print(f' {self.winner} Wins')
         print(
