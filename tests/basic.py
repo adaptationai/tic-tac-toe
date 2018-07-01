@@ -1,5 +1,5 @@
 import unittest
-import tictactoe
+from .. import tictactoe
 
 
 class PlayerTest(unittest.TestCase):
