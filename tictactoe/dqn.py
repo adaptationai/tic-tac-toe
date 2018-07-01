@@ -75,21 +75,21 @@ class DQN:
         self.memory.append([state, action, reward, new_state, done])
 
     def replay(self):
-        # batch_size = 32
-        # if len(self.memory) < batch_size:
-        #     return
+        batch_size = 32
+        if len(self.memory) < batch_size:
+            return
 
-        # samples = random.sample(self.memory, batch_size)
-        # for sample in samples:
-        #     state, action, reward, new_state, done = sample
-        #     target = self.target_model.predict(state)
-        #     if done:
-        #         target[0][action] = reward
-        #     else:
-        #         Q_future = max(self.target_model.predict(new_state)[0])
-        #         # print(Q_future)
-        #         target[0][action] = reward + Q_future * self.gamma
-        #     self.model.fit(state, target, epochs=1, verbose=0)
+        samples = random.sample(self.memory, batch_size)
+        for sample in samples:
+            state, action, reward, new_state, done = sample
+            target = self.target_model.predict(state)
+            if done:
+                target[0][action] = reward
+            else:
+                Q_future = max(self.target_model.predict(new_state)[0])
+                # print(Q_future)
+                target[0][action] = reward + Q_future * self.gamma
+            self.model.fit(state, target, epochs=1, verbose=0)
         return
 
     def target_train(self):
