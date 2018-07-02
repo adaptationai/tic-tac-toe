@@ -192,7 +192,7 @@ class Play_game:
 
     def play_full_step(self):
         self.setup(RandomPlayer(), AIPlayer(
-            DQN(self.current_state, self.state_size, self.action_size, 1.0, False)))
+            DQN(self.current_state, self.state_size, self.action_size, 0.01, False)))
         # self.player_two.agent.load_model("drive/tictactoe/tictactoemodel1.h5")
         # self.player_two.agent.load_target("drive/tictactoe/tictactoetarget1.h5")
         # self.player_two.agent.load_memory("drive/tictactoe/ticdeque1.pkl")

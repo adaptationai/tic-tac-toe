@@ -30,10 +30,10 @@ class DQN:
         self.state_size = state_size
         self.action_size = action_size
         if self.load:
-            self.model = load_model("drive/tictactoe/tictactoemodel.h5")
+            self.model = load_model("tictactoe/data/tictactoemodel.h5")
             self.target_model = load_model(
-                "drive/tictactoe/tictactoetarget.h5")
-            self.load_memory("drive/tictactoe/ticdeque.pkl")
+                "tictactoe/data/tictactoetarget.h5")
+            self.load_memory("tictactoe/data/ticdeque.pkl")
 
     def create_model(self):
         model = Sequential()
