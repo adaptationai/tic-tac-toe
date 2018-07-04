@@ -2,6 +2,7 @@ import json
 import pickle
 import random
 from collections import deque
+import os
 
 import keras.backend as K
 import numpy as np
@@ -15,7 +16,7 @@ class DQN:
     # def __init__(self, env):
     def __init__(self, env, state_size, action_size, epsilon, load):
         self.env = env
-        #self.memory  = deque(maxlen=1000000)
+        
 
         self.gamma = 0.99
         self.epsilon = epsilon
@@ -30,6 +31,7 @@ class DQN:
         self.state_size = state_size
         self.action_size = action_size
         if self.load:
+            self.ensure_dir("tictactoe/data2")
             self.model = load_model("tictactoe/data/tictactoemodel.h5")
             self.target_model = load_model(
                 "tictactoe/data/tictactoetarget.h5")
@@ -60,16 +62,6 @@ class DQN:
         #print(f' argsort: {np.argsort(self.model.predict(state)[0])} predict: {self.model.predict(state)[0]} argmax: {np.argmax(self.model.predict(state)[0])} ')
         return argmax
 
-    def act2(self, state):
-        self.epsilon *= self.epsilon_decay
-        self.epsilon = max(self.epsilon_min, self.epsilon)
-        # if np.random.random() < self.epsilon:
-        # return random.randrange(self.action_size)
-        argsort = np.argsort(self.model.predict(state)[0])
-        predict = self.model.predict(state)[0]
-        argmax = np.argmax(self.model.predict(state)[0])
-        #print(f' argsort: {argsort} predict: {predict} argmax: {argmax} ')
-        return argsort
 
     def remember(self, state, action, reward, new_state, done):
         self.memory.append([state, action, reward, new_state, done])
@@ -78,9 +70,10 @@ class DQN:
         batch_size = 32
         if len(self.memory) < batch_size:
             return
-
+        
         samples = random.sample(self.memory, batch_size)
         for sample in samples:
+            #if len(sample) == 5:
             state, action, reward, new_state, done = sample
             target = self.target_model.predict(state)
             if done:
@@ -140,3 +133,8 @@ class DQN:
         pkl_file = open(name, 'rb')
         self.memory = pickle.load(pkl_file)
         pkl_file.close()
+
+    def ensure_dir(self, file_path):
+        directory = os.path.dirname(file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
