@@ -20,8 +20,8 @@ class DQN:
 
         self.gamma = 0.99
         self.epsilon = epsilon
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.999999
+        self.epsilon_min = 0.0
+        self.epsilon_decay = 0.99999
         self.learning_rate = 0.00025
         self.tau = .125
         self.load = load
@@ -32,9 +32,9 @@ class DQN:
         self.action_size = action_size
         if self.load:
             #self.ensure_dir("tictactoe/data2")
-            self.model = load_model("tictactoe/data/tictactoemodel.h5")
+            self.model = load_model("tictactoe/data/tictactoemodel2.h5")
             self.target_model = load_model(
-                "tictactoe/data/tictactoetarget.h5")
+                "tictactoe/data/tictactoetarget2.h5")
             #self.load_memory("tictactoe/data/ticdeque.pkl")
 
     def create_model(self):

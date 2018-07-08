@@ -11,7 +11,7 @@ class Play():
     def training(self):
         self.env = State()
         state = self.env.setup()
-        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 1.0, True)
+        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 0.0, True)
         games = 10000000
         played = 0
         total = 0
@@ -56,11 +56,11 @@ class Play():
                 print(self.agent.epsilon)
                 print(target_update)
                 self.agent.save_model(
-                    "tictactoe/data/tictactoemodel.h5")
+                    "tictactoe/data/tictactoemodel2.h5")
                 self.agent.save_target(
-                    "tictactoe/data/tictactoetarget.h5")
+                    "tictactoe/data/tictactoetarget2.h5")
                 self.agent.save_memory(
-                    "tictactoe/data/ticdeque.pkl")
+                    "tictactoe/data/ticdeque2.pkl")
 
         print(f' {self.env.winner} Wins')
         print(

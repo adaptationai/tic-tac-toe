@@ -130,7 +130,7 @@ class State():
             # print("half")
                 return new_state, reward, done
         
-        self.render()     
+        #self.render()     
         self.current_player = self.player_two
         self.previous_player = self.player_one
         self.current_player.feed_state(self.current_state)
