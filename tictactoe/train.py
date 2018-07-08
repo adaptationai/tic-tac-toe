@@ -11,7 +11,7 @@ class Play():
     def training(self):
         self.env = State()
         state = self.env.setup()
-        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 0.0, True)
+        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 1.0, True)
         games = 10000000
         played = 0
         total = 0

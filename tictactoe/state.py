@@ -130,7 +130,7 @@ class State():
             # print("half")
                 return new_state, reward, done
         
-            
+        self.render()     
         self.current_player = self.player_two
         self.previous_player = self.player_one
         self.current_player.feed_state(self.current_state)
@@ -155,6 +155,8 @@ class State():
         self.current_state = self.board
         self.player_one = Agent()
         self.player_two = RandomPlayer()
+        #self.player_one = Agent()
+        #self.player_two = Player()
         self.player_one.name = "Player One"
         self.player_two.name = "Player Two"
         self.player_one.symbol = 1

@@ -20,7 +20,7 @@ class DQN:
 
         self.gamma = 0.99
         self.epsilon = epsilon
-        self.epsilon_min = 0.0
+        self.epsilon_min = 0.01
         self.epsilon_decay = 0.999999
         self.learning_rate = 0.00025
         self.tau = .125
