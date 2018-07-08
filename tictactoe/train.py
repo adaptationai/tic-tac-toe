@@ -11,7 +11,7 @@ class Play():
     def training(self):
         self.env = State()
         state = self.env.setup()
-        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 1.0, False)
+        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 0.0, True)
         games = 10000000
         played = 0
         total = 0
@@ -23,12 +23,14 @@ class Play():
             done = False
             #print(f'new start{state}')
             for a in range(5000):
-                
+                state =  np.copy(self.env.current_state)
                 state = np.reshape(state, [1, self.env.state_size])
+                #print(f'step state{state}')
                 action = self.agent.act(state)
                 new_state, reward, done = self.env.step(action)
-               #print(f' state {state} action: {action} reward: {reward} new_state: {new_state} done:{done}')
-                new_state = np.reshape(state, [1, self.env.state_size])
+                
+                new_state = np.reshape(new_state, [1, self.env.state_size])
+                #print(f' state {state} action: {action} reward: {reward} new_state: {new_state} done:{done}')
 
                 self.agent.remember(
                     state, action, reward, new_state, done)

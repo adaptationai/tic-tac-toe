@@ -7,29 +7,15 @@ from . import DQN, AIPlayer, Player, RandomPlayer, State
 
 class Play_game:
     def __init__(self):
-        self.player_one = Player()
-        self.player_two = Player()
-        self.current_state = State()
-        self.current_player = None
-        self.previous_player = None
-        self.winner = "Draw"
-        self.state_size = 9
-        self.action_size = 9
-        self.draw = 0
-        self.batch_size = 32
-        self.reward = 0
-        self.symbol = 0
-        return
+        self.test = None
 
     
     
-    def play_full_step(self):
-        self.setup(RandomPlayer(), AIPlayer(
-            DQN(self.current_state, self.state_size, self.action_size, 0.01, False)))
-        # self.player_two.agent.load_model("drive/tictactoe/tictactoemodel1.h5")
-        # self.player_two.agent.load_target("drive/tictactoe/tictactoetarget1.h5")
-        # self.player_two.agent.load_memory("drive/tictactoe/ticdeque1.pkl")
-        games = 100000
+    def playe_full_step(self):
+        self.env = State()
+        state = self.env.setup()
+        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 1.0, True)
+        games = 10000000
         played = 0
         total = 0
         done = False
@@ -82,5 +68,3 @@ class Play_game:
             f' Scores:\n Player One: {self.env.player_one.score} \n Player Two:{self.env.player_two.score}  \n Draws:{self.env.draw}%')
         
         print('Good Bye')
-
-  

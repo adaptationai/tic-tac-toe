@@ -105,13 +105,14 @@ class State():
         self.current_player.feed_state(self.current_state)
         r, c, symbol = self.current_player.take_action(action)
         if self.current_state[r,c] != 0:
-            self.loop += 1
+            #print('moose')
+           
             new_state = np.array(self.current_state)
             #new_state = np.reshape(new_state, [1, self.state_size])
             self.previous_player.feed_score(1)
             reward = -1
             #reward = self.iswin()
-            done = self.checker()
+            #done = self.checker()
             done = True
             #print("yeah")
             return new_state, reward, done
@@ -119,6 +120,7 @@ class State():
         else:
             self.loop = 0
             self.current_state[r, c] = symbol
+            #print(f'else current state = {self.current_state}')
             done = self.checker()
             reward = self.iswin()
             new_state = np.array(self.current_state)
@@ -127,6 +129,7 @@ class State():
             if done == True:
             # print("half")
                 return new_state, reward, done
+        
             
         self.current_player = self.player_two
         self.previous_player = self.player_one
@@ -141,6 +144,8 @@ class State():
         reward = self.iswin()
         new_state = np.array(self.current_state)
         new_state = np.reshape(new_state, [1, self.state_size])
+        #print(f'p2 current = {self.current_state}')
+        #print(f'new state = {new_state}')
 
         return new_state, reward, done
 
