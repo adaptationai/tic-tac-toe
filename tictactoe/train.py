@@ -10,8 +10,8 @@ class Play():
     
     def training(self):
         self.env = State()
-        state = self.env.setup()
-        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 0.0, True)
+        state = self.env.setup(start="p1", players ="random")
+        self.agent = DQN(self.env, self.env.state_size, self.env.action_size, 0.0, True, "GOD")
         games = 10000000
         played = 0
         total = 0
@@ -20,6 +20,9 @@ class Play():
 
         for i in range(games):
             state = self.env.reset()
+            if self.env.symbol == -1:
+                self.env.start_move()
+
             done = False
             #print(f'new start{state}')
             for a in range(5000):
@@ -55,12 +58,20 @@ class Play():
                 played = 0
                 print(self.agent.epsilon)
                 print(target_update)
-                self.agent.save_model(
-                    "tictactoe/data/tictactoemodel2.h5")
-                self.agent.save_target(
-                    "tictactoe/data/tictactoetarget2.h5")
-                self.agent.save_memory(
-                    "tictactoe/data/ticdeque2.pkl")
+                if self.env.random_start:
+                    self.agent.save_model("tictactoe/data/tictactoemodelrandom.h5")
+                    self.agent.save_target("tictactoe/data/tictactoetargetrandom.h5")
+                    self.agent.save_memory("tictactoe/data/ticdequerandom.pkl")
+                if self.env.starting:
+                    self.agent.save_model("tictactoe/data/tictactoemodelp1.h5")
+                    self.agent.save_target("tictactoe/data/tictactoetargetp1.h5")
+                    self.agent.save_memory("tictactoe/data/ticdequerp1.pkl")
+                else:
+                    self.agent.save_model("tictactoe/data/tictactoemodelp2.h5")
+                    self.agent.save_target("tictactoe/data/tictactoetargetp2.h5")
+                    self.agent.save_memory("tictactoe/data/ticdequep2.pkl")
+
+                
 
         print(f' {self.env.winner} Wins')
         print(

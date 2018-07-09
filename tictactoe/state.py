@@ -24,6 +24,8 @@ class State():
         self.action_size = 9
         self.draw = 0
         self.loop = 0
+        self.random_start = False
+        self.starting = None
         return
 
     def move_ok(self, r, c):
@@ -150,13 +152,23 @@ class State():
         return new_state, reward, done
 
 
-    def setup(self):
+    def setup(self, start, players):
+        if start == "random":
+            self.random_start = True
+        if start == "p1":
+            self.starting = True
+        if start == 'p2':
+            self.starting = False
 
-        self.current_state = self.board
         self.player_one = Agent()
-        self.player_two = RandomPlayer()
-        #self.player_one = Agent()
-        #self.player_two = Player()
+        if players == "random":
+            self.player_two = RandomPlayer()
+        if players == "human":
+            self.player_two = Player()
+        if players == "duel":
+            self.player_two = Agent()
+        self.current_state = self.board
+        
         self.player_one.name = "Player One"
         self.player_two.name = "Player Two"
         self.player_one.symbol = 1
@@ -170,10 +182,20 @@ class State():
     def reset(self):
         self.resetting()
         self.current_state = self.board
-        self.current_player = self.player_one
-        self.previous_player = self.player_two
-        self.symbol = 1
-        #self.starter()
+        if self.random_start:
+            self.starter()
+
+        if self.starting:
+            self.current_player = self.player_one
+            self.previous_player = self.player_two
+            self.symbol = 1
+
+        if self.starting == False:
+            self.current_player = self.player_two
+            self.previous_player = self.player_one
+            self.symbol = -1
+
+        
         self.winner = "Draw"
         self.reward = 0
         self.current_player.reward = 0
@@ -235,6 +257,21 @@ class State():
         self.previous_player = None
         self.next_state = None
         self.loop = 0
+
+
+    def start_move(self):
+        #self.render()     
+        self.current_player = self.player_two
+        self.previous_player = self.player_one
+        self.current_player.feed_state(self.current_state)
+        r, c, symbol = self.current_player.take_action(self.current_state)
+        self.current_state[r, c] = symbol
+        done = self.checker()
+        reward = self.iswin()
+        new_state = np.array(self.current_state)
+        new_state = np.reshape(new_state, [1, self.state_size])
+
+        return new_state, reward, done
         
 
         

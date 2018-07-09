@@ -14,7 +14,7 @@ from keras.optimizers import Adam
 
 class DQN:
     # def __init__(self, env):
-    def __init__(self, env, state_size, action_size, epsilon, load):
+    def __init__(self, env, state_size, action_size, epsilon, load, style):
         self.env = env
         
 
@@ -30,12 +30,24 @@ class DQN:
         self.memory = deque(maxlen=10000000)
         self.state_size = state_size
         self.action_size = action_size
+        self.style = style
         if self.load:
-            #self.ensure_dir("tictactoe/data2")
-            self.model = load_model("tictactoe/data/tictactoemodel2.h5")
-            self.target_model = load_model(
-                "tictactoe/data/tictactoetarget2.h5")
-            #self.load_memory("tictactoe/data/ticdeque.pkl")
+            if self.style == "random":
+                self.load_model("tictactoe/data/tictactoemodelrandom.h5")
+                self.load_target("tictactoe/data/tictactoetargetrandom.h5")
+                self.load_memory("tictactoe/data/ticdequerandom.pkl")
+            if self.style == "p1":
+                self.load_model("tictactoe/data/tictactoemodelp1.h5")
+                self.load_target("tictactoe/data/tictactoetargetp1.h5")
+                self.load_memory("tictactoe/data/ticdequerp1.pkl")
+            if self.style == "p2":
+                self.load_model("tictactoe/data/tictactoemodelp2.h5")
+                self.load_target("tictactoe/data/tictactoetargetp2.h5")
+                self.load_memory("tictactoe/data/ticdequep2.pkl")
+            if self.style == "GOD":
+                self.load_model("tictactoe/data/tictactoemodel2.h5")
+                self.load_target("tictactoe/data/tictactoetarget2.h5")
+                self.load_memory("tictactoe/data/ticdeque2.pkl")
 
     def create_model(self):
         model = Sequential()
