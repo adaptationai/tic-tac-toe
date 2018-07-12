@@ -2,6 +2,7 @@ import json
 import pickle
 import random
 from collections import deque
+import os
 
 import keras.backend as K
 import numpy as np
@@ -13,14 +14,14 @@ from keras.optimizers import Adam
 
 class DQN:
     # def __init__(self, env):
-    def __init__(self, env, state_size, action_size, epsilon, load):
+    def __init__(self, env, state_size, action_size, epsilon, load, style):
         self.env = env
-        #self.memory  = deque(maxlen=1000000)
+        
 
         self.gamma = 0.99
         self.epsilon = epsilon
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.999999
+        self.epsilon_min = 0.0
+        self.epsilon_decay = 0.99999
         self.learning_rate = 0.00025
         self.tau = .125
         self.load = load
@@ -29,11 +30,24 @@ class DQN:
         self.memory = deque(maxlen=10000000)
         self.state_size = state_size
         self.action_size = action_size
+        self.style = style
         if self.load:
-            self.model = load_model("drive/tictactoe/tictactoemodel.h5")
-            self.target_model = load_model(
-                "drive/tictactoe/tictactoetarget.h5")
-            self.load_memory("drive/tictactoe/ticdeque.pkl")
+            if self.style == "random":
+                self.load_model("tictactoe/data/tictactoemodelrandom.h5")
+                self.load_target("tictactoe/data/tictactoetargetrandom.h5")
+                self.load_memory("tictactoe/data/ticdequerandom.pkl")
+            if self.style == "p1":
+                self.load_model("tictactoe/data/tictactoemodelp1.h5")
+                self.load_target("tictactoe/data/tictactoetargetp1.h5")
+                self.load_memory("tictactoe/data/ticdequerp1.pkl")
+            if self.style == "p2":
+                self.load_model("tictactoe/data/tictactoemodelp2.h5")
+                self.load_target("tictactoe/data/tictactoetargetp2.h5")
+                self.load_memory("tictactoe/data/ticdequep2.pkl")
+            if self.style == "GOD":
+                self.load_model("tictactoe/data/tictactoemodel2.h5")
+                self.load_target("tictactoe/data/tictactoetarget2.h5")
+                self.load_memory("tictactoe/data/ticdeque2.pkl")
 
     def create_model(self):
         model = Sequential()
@@ -60,36 +74,27 @@ class DQN:
         #print(f' argsort: {np.argsort(self.model.predict(state)[0])} predict: {self.model.predict(state)[0]} argmax: {np.argmax(self.model.predict(state)[0])} ')
         return argmax
 
-    def act2(self, state):
-        self.epsilon *= self.epsilon_decay
-        self.epsilon = max(self.epsilon_min, self.epsilon)
-        # if np.random.random() < self.epsilon:
-        # return random.randrange(self.action_size)
-        argsort = np.argsort(self.model.predict(state)[0])
-        predict = self.model.predict(state)[0]
-        argmax = np.argmax(self.model.predict(state)[0])
-        #print(f' argsort: {argsort} predict: {predict} argmax: {argmax} ')
-        return argsort
 
     def remember(self, state, action, reward, new_state, done):
         self.memory.append([state, action, reward, new_state, done])
 
     def replay(self):
-        # batch_size = 32
-        # if len(self.memory) < batch_size:
-        #     return
-
-        # samples = random.sample(self.memory, batch_size)
-        # for sample in samples:
-        #     state, action, reward, new_state, done = sample
-        #     target = self.target_model.predict(state)
-        #     if done:
-        #         target[0][action] = reward
-        #     else:
-        #         Q_future = max(self.target_model.predict(new_state)[0])
-        #         # print(Q_future)
-        #         target[0][action] = reward + Q_future * self.gamma
-        #     self.model.fit(state, target, epochs=1, verbose=0)
+        batch_size = 32
+        if len(self.memory) < batch_size:
+            return
+        
+        samples = random.sample(self.memory, batch_size)
+        for sample in samples:
+            #if len(sample) == 5:
+            state, action, reward, new_state, done = sample
+            target = self.target_model.predict(state)
+            if done:
+                target[0][action] = reward
+            else:
+                Q_future = max(self.target_model.predict(new_state)[0])
+                # print(Q_future)
+                target[0][action] = reward + Q_future * self.gamma
+            self.model.fit(state, target, epochs=1, verbose=0)
         return
 
     def target_train(self):
@@ -140,3 +145,8 @@ class DQN:
         pkl_file = open(name, 'rb')
         self.memory = pickle.load(pkl_file)
         pkl_file.close()
+
+    def ensure_dir(self, file_path):
+        directory = os.path.dirname(file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)

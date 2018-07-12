@@ -5,6 +5,7 @@ import random
 class RandomPlayer:
     def __init__(self):
         #self.agent = agent
+    
         self.symbol = None
         self.current_state = None
         self.score = 0
@@ -19,37 +20,23 @@ class RandomPlayer:
         self.symbol = symbol
         return
 
-    def take_action(self):
+    def take_action(self, current_state):
         # print(self.name)
-        self.state = np.reshape(self.current_state.board, [1, self.state_size])
+        state = current_state
+        #print(f'in: {state}')
         move = random.randrange(self.action_size)
         move = int(move)
-        self.action = move
-        #move = move -1
+
         r = move // 3
         c = move % 3
 
-        if self.current_state.board[r, c] != 0:
-            return self.take_action()
-        else:
+        if state[r, c] != 0:
+            
+            return self.take_action(state)
 
+        else:
             return (r, c, self.symbol)
 
-    def take_act(self, state):
-        # print(self.name)
-        self.state = np.reshape(self.current_state.board, [1, self.state_size])
-        move = random.randrange(self.action_size)
-        move = int(move)
-        self.action = move
-        #move = move -1
-        r = move // 3
-        c = move % 3
-
-        if self.current_state.board[r, c] != 0:
-            return self.take_action()
-        else:
-
-            return (r, c, self.symbol)
 
     def feed_state(self, state):
         self.current_state = state

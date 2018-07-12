@@ -18,8 +18,8 @@ class Player:
         self.symbol = symbol
         return
 
-    def take_action(self):
-        print(self.name)
+    def take_action(self, current_state):
+        state = current_state
         move = 0
         while move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
             move = input('Please select your postition (1-9 from top left) ')
@@ -28,25 +28,13 @@ class Player:
         r = move // 3
         c = move % 3
 
-        if self.current_state.board[r, c] != 0:
-            return self.take_action()
+        if state[r, c] != 0:
+            
+            return self.take_action(state)
+
         else:
             return (r, c, self.symbol)
 
-    def take_act(self):
-        print(self.name)
-        move = 0
-        while move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            move = input('Please select your postition (1-9 from top left) ')
-        move = int(move)
-        move = move - 1
-        r = move // 3
-        c = move % 3
-
-        if self.current_state.board[r, c] != 0:
-            return self.take_action()
-        else:
-            return (r, c, self.symbol)
 
     def feed_state(self, state):
         self.current_state = state
